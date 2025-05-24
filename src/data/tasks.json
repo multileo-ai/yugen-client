@@ -1,0 +1,20 @@
+[
+  {
+    "id": "task-1",
+    "title": "Build a Landing Page",
+    "points": 50,
+    "progress": 80
+  },
+  {
+    "id": "task-2",
+    "title": "Style the Navbar",
+    "points": 30,
+    "progress": 60
+  },
+  {
+    "id": "task-3",
+    "title": "Add Interactivity",
+    "points": 40,
+    "progress": 30
+  }
+]
