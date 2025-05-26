@@ -17,10 +17,8 @@ const Login = () => {
 
     try {
       // Step 1: Login and get token
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        form
-      );
+      const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await axios.post(`${API}/api/auth/login`, form);
       const { token } = res.data;
 
       // Step 2: Fetch full user profile using token
