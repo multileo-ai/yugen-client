@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { IoAdd, IoChatbubble, IoSend, IoStar } from "react-icons/io5";
+import {
+  IoAdd,
+  IoChatbubble,
+  IoPencil,
+  IoPencilSharp,
+  IoSend,
+  IoStar,
+} from "react-icons/io5";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { FaRegCircle, FaCheckCircle } from "react-icons/fa";
 
