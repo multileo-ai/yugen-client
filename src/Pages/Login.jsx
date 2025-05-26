@@ -25,11 +25,13 @@ const Login = () => {
 
       // Step 2: Fetch full user profile using token
       const profileRes = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Step 3: Save token + full user info to localStorage
       localStorage.setItem(
@@ -42,7 +44,12 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong. Try again.");
+      const serverError = err.response?.data?.error;
+      const errorMessage =
+        typeof serverError === "string"
+          ? serverError
+          : serverError?.message || "Something went wrong. Try again.";
+      setError(errorMessage);
     }
   };
 
