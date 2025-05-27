@@ -32,8 +32,11 @@ const ProfileLeftTab = ({
         //   `http://localhost:5000/api/auth/user/${selectedUser}`
         // );
 
-        res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/auth/user/${selectedUser}`
+        const baseURL =
+          process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+        console.log("API base URL:", baseURL);
+        const res = await axios.post(
+          `${baseURL}/api/auth/user/${selectedUser}`
         );
       } else {
         // res = await axios.get("http://localhost:5000/api/auth/me", {
@@ -42,7 +45,10 @@ const ProfileLeftTab = ({
         //   },
         // });
 
-        res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/me`, {
+        const baseURL =
+          process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+        console.log("API base URL:", baseURL);
+        const res = await axios.post(`${baseURL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${storedUser.token}`,
           },

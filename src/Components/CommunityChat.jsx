@@ -24,7 +24,10 @@ const CommunityChat = ({ onUserClick }) => {
     try {
       // const res = await axios.get("http://localhost:5000/api/chat");
 
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/chat`);
+      const baseURL =
+        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      console.log("API base URL:", baseURL);
+      const res = await axios.post(`${baseURL}/api/chat`);
 
       if (Array.isArray(res.data)) {
         setMessages((prevMessages) => {
@@ -65,8 +68,11 @@ const CommunityChat = ({ onUserClick }) => {
       //   }
       // );
 
+      const baseURL =
+        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      console.log("API base URL:", baseURL);
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/chat`,
+        `${baseURL}/api/chat`,
         { message },
         {
           headers: { Authorization: `Bearer ${token}` },

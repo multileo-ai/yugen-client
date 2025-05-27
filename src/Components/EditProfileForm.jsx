@@ -72,15 +72,14 @@ const EditProfileForm = ({ onEditClick }) => {
         //     Authorization: `Bearer ${token}`,
         //   },
         // });
-
-        const res = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/auth/me`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const baseURL =
+          process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+        console.log("API base URL:", baseURL);
+        const res = await axios.post(`${baseURL}/api/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         // Adjust path if needed
         const data = res.data;
@@ -191,16 +190,15 @@ const EditProfileForm = ({ onEditClick }) => {
       //   }
       // );
 
-      const res = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/auth/update`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const baseURL =
+        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      console.log("API base URL:", baseURL);
+      const res = await axios.post(`${baseURL}/api/auth/update`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const updatedUser = {
         ...res.data,
