@@ -11,8 +11,8 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // clear auth token
-    navigate("/login"); // redirect to login page
+    localStorage.clear(); // Clear all stored user data
+    navigate("/login"); // Redirect to login page
   };
 
   useEffect(() => {

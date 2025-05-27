@@ -6,6 +6,10 @@
   }
 }
 
+body {
+  overflow: hidden;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .scroll-hidden::-webkit-scrollbar {
   display: none;

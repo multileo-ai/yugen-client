@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
 
-const CommunityChat = () => {
+const CommunityChat = ({ onUserClick }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -83,7 +83,10 @@ const CommunityChat = () => {
                         : "bg-gray-100 text-black"
                     }`}
                   >
-                    <strong>
+                    <strong
+                      className="cursor-pointer hover:underline"
+                      onClick={() => onUserClick(msg.username)}
+                    >
                       {msg.name} (@{msg.username}):
                     </strong>{" "}
                     {msg.message}
