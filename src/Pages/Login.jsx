@@ -21,12 +21,9 @@ const Login = () => {
       //   "http://localhost:5000/api/auth/login",
       //   form
       // );
-      const baseURL = process.env.REACT_APP_API_URL;
+      const baseURL = process.env.REACT_APP_API_URL || "http://localhost:5000";
       console.log("API base URL:", baseURL);
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        form
-      );
+      const res = await axios.post(`${baseURL}/api/auth/login`, form);
 
       const { token } = res.data;
 
