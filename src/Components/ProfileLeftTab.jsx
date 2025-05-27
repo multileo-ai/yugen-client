@@ -61,12 +61,15 @@ const ProfileLeftTab = ({
     return () => window.removeEventListener("profile-updated", fetchUserData);
   }, [refreshKey, selectedUser]);
 
+  // const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
   return (
     <div className="mt-[30px] ml-[30px] w-[360px] h-[80vh] bg-[#6D6AEF] rounded-[50px] flex flex-col">
       {/* Banner */}
       <div className="w-[360px] h-[30%] rounded-t-[50px] relative overflow-hidden">
         <img
-          src={`${process.env.REACT_APP_API_URL}${
+          // src={`${API_BASE_URL}${user.bannerImage || "/default_banner.png"}`}
+          src={`http://localhost:5000${
             user.bannerImage || "/default_banner.png"
           }`}
           alt="banner"
@@ -98,7 +101,8 @@ const ProfileLeftTab = ({
       <div className="flex justify-center items-center relative -mt-[60px] z-10">
         <div className="w-[120px] h-[120px] rounded-[30px] border-4 border-white overflow-hidden shadow-lg">
           <img
-            src={`${process.env.REACT_APP_API_URL}${
+            // src={`${API_BASE_URL}${user.profileImage || "/default_pfp.jpg"}`}
+            src={`http://localhost:5000${
               user.profileImage || "/default_pfp.jpg"
             }`}
             alt="profile"
