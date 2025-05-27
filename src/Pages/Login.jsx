@@ -35,14 +35,11 @@ const Login = () => {
       //   },
       // });
 
-      const profileRes = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/auth/me`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const profileRes = await axios.get(`${baseURL}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       // Step 3: Save token + full user info to localStorage
       localStorage.setItem(
