@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
 
 const CommunityChat = ({ onUserClick }) => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const bottomRef = useRef(null);
 
   // Fix currentUser: assume localStorage 'user' stores { token, user }
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
@@ -23,13 +24,21 @@ const CommunityChat = ({ onUserClick }) => {
     try {
       const res = await axios.get("http://localhost:5000/api/chat");
       if (Array.isArray(res.data)) {
-        setMessages(res.data);
+        setMessages((prevMessages) => {
+          const newMessages = res.data;
+          // Check if new messages added
+          if (newMessages.length > prevMessages.length && isNearBottom()) {
+            setTimeout(
+              () => bottomRef.current?.scrollIntoView({ behavior: "smooth" }),
+              100
+            );
+          }
+          return newMessages;
+        });
       } else {
-        console.error("Invalid format: messages not an array");
         setMessages([]);
       }
     } catch (err) {
-      console.error("Failed to load messages:", err);
       setMessages([]);
     }
   };
@@ -53,11 +62,27 @@ const CommunityChat = ({ onUserClick }) => {
         }
       );
 
-      setMessages((prev) => [...prev, res.data]);
+      setMessages((prev) => {
+        const updated = [...prev, res.data];
+        // Scroll after messages update
+        setTimeout(() => {
+          bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+        return updated;
+      });
+
       setMessage("");
     } catch (err) {
       console.error("Failed to send message:", err);
     }
+  };
+
+  const isNearBottom = () => {
+    const container = document.getElementById("chat-scroll-container");
+    return container
+      ? container.scrollHeight - container.scrollTop - container.clientHeight <
+          150
+      : false;
   };
 
   return (
@@ -65,7 +90,10 @@ const CommunityChat = ({ onUserClick }) => {
       {/* Chat Box */}
       <div className="w-[970px] h-[560px] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col justify-between">
         {/* Message Display */}
-        <div className="overflow-y-auto flex-1 pr-2 mb-4 space-y-3">
+        <div
+          id="chat-scroll-container"
+          className="h-[420px] overflow-y-auto pr-2 mb-4 space-y-3 scroll-hidden"
+        >
           {Array.isArray(messages) &&
             messages.map((msg, index) => {
               const isCurrentUser = msg.username === currentUser.username;
@@ -85,7 +113,11 @@ const CommunityChat = ({ onUserClick }) => {
                   >
                     <strong
                       className="cursor-pointer hover:underline"
-                      onClick={() => onUserClick(msg.username)}
+                      onClick={() => {
+                        if (msg.username !== currentUser.username) {
+                          onUserClick(msg.username);
+                        }
+                      }}
                     >
                       {msg.name} (@{msg.username}):
                     </strong>{" "}
@@ -94,6 +126,7 @@ const CommunityChat = ({ onUserClick }) => {
                 </div>
               );
             })}
+          <div ref={bottomRef} />
         </div>
 
         {/* Message Input */}

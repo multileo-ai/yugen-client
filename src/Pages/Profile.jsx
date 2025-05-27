@@ -22,7 +22,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen fixed">
       <ProfileLeftTab
         selectedUser={viewedUser} // ✅ Correct variable
         onEditClick={() => setActiveTab("edit")}
