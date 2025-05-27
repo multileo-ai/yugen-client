@@ -22,12 +22,12 @@ const CommunityChat = ({ onUserClick }) => {
 
   const fetchMessages = async () => {
     try {
-      // const res = await axios.get("http://localhost:5000/api/chat");
+      const res = await axios.get("http://localhost:5000/api/chat");
 
-      const baseURL =
-        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-      console.log("API base URL:", baseURL);
-      const res = await axios.post(`${baseURL}/api/chat`);
+      // const baseURL =
+      //   process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      // console.log("API base URL:", baseURL);
+      // const res = await axios.post(`${baseURL}/api/chat`);
 
       if (Array.isArray(res.data)) {
         setMessages((prevMessages) => {
@@ -60,24 +60,21 @@ const CommunityChat = ({ onUserClick }) => {
         return;
       }
 
-      // const res = await axios.post(
-      //   "http://localhost:5000/api/chat",
-      //   { message },
-      //   {
-      //     headers: { Authorization: `Bearer ${token}` },
-      //   }
-      // );
-
-      const baseURL =
-        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-      console.log("API base URL:", baseURL);
       const res = await axios.post(
-        `${baseURL}/api/chat`,
+        "http://localhost:5000/api/chat",
         { message },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      // const res = await axios.post(
+      //   `${baseURL}/api/chat`,
+      //   { message },
+      //   {
+      //     headers: { Authorization: `Bearer ${token}` },
+      //   }
+      // );
 
       setMessages((prev) => {
         const updated = [...prev, res.data];
