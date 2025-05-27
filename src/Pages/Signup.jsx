@@ -16,10 +16,10 @@ const Signup = () => {
     try {
       // await axios.post("http://localhost:5000/api/auth/signup", form);
 
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/signup`,
-        form
-      );
+      const baseURL =
+        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      console.log("API base URL:", baseURL);
+      const res = await axios.post(`${baseURL}/api/auth/signup`, form);
 
       // await axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, form);
 
