@@ -66,7 +66,7 @@ const ProfileLeftTab = ({
       {/* Banner */}
       <div className="w-[360px] h-[30%] rounded-t-[50px] relative overflow-hidden">
         <img
-          src={`http://localhost:5000${
+          src={`${process.env.REACT_APP_API_URL}${
             user.bannerImage || "/default_banner.png"
           }`}
           alt="banner"
@@ -98,7 +98,7 @@ const ProfileLeftTab = ({
       <div className="flex justify-center items-center relative -mt-[60px] z-10">
         <div className="w-[120px] h-[120px] rounded-[30px] border-4 border-white overflow-hidden shadow-lg">
           <img
-            src={`http://localhost:5000${
+            src={`${process.env.REACT_APP_API_URL}${
               user.profileImage || "/default_pfp.jpg"
             }`}
             alt="profile"
@@ -133,7 +133,7 @@ const ProfileLeftTab = ({
       <div className="ml-[30px] mr-[30px] mt-[20px]">
         <h1 className="text-white font-semibold mb-[8px]">SKILLS</h1>
         <div className="grid grid-cols-4 gap-3 text-[12px]">
-          {user.skills.map((skill, index) => (
+          {(user.skills || []).map((skill, index) => (
             <div
               key={index}
               className="bg-white text-center px-[6px] py-[4px] rounded"
