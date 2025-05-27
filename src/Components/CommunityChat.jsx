@@ -22,7 +22,10 @@ const CommunityChat = ({ onUserClick }) => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/chat");
+      // const res = await axios.get("http://localhost:5000/api/chat");
+
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/chat`);
+
       if (Array.isArray(res.data)) {
         setMessages((prevMessages) => {
           const newMessages = res.data;
@@ -54,8 +57,16 @@ const CommunityChat = ({ onUserClick }) => {
         return;
       }
 
+      // const res = await axios.post(
+      //   "http://localhost:5000/api/chat",
+      //   { message },
+      //   {
+      //     headers: { Authorization: `Bearer ${token}` },
+      //   }
+      // );
+
       const res = await axios.post(
-        "http://localhost:5000/api/chat",
+        `${process.env.REACT_APP_API_URL}/api/chat`,
         { message },
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -17,18 +17,33 @@ const Login = () => {
 
     try {
       // Step 1: Login and get token
+      // const res = await axios.post(
+      //   "http://localhost:5000/api/auth/login",
+      //   form
+      // );
+
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
         form
       );
+
       const { token } = res.data;
 
       // Step 2: Fetch full user profile using token
-      const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      // const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+
+      const profileRes = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/auth/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Step 3: Save token + full user info to localStorage
       localStorage.setItem(

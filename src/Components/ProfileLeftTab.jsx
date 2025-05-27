@@ -28,11 +28,21 @@ const ProfileLeftTab = ({
 
       if (selectedUser) {
         // ✅ Corrected route for viewing another user's profile
+        // res = await axios.get(
+        //   `http://localhost:5000/api/auth/user/${selectedUser}`
+        // );
+
         res = await axios.get(
-          `http://localhost:5000/api/auth/user/${selectedUser}`
+          `${process.env.REACT_APP_API_URL}/api/auth/user/${selectedUser}`
         );
       } else {
-        res = await axios.get("http://localhost:5000/api/auth/me", {
+        // res = await axios.get("http://localhost:5000/api/auth/me", {
+        //   headers: {
+        //     Authorization: `Bearer ${storedUser.token}`,
+        //   },
+        // });
+
+        res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${storedUser.token}`,
           },

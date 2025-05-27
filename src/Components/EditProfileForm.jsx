@@ -67,11 +67,21 @@ const EditProfileForm = ({ onEditClick }) => {
     const fetchUser = async () => {
       try {
         const token = JSON.parse(localStorage.getItem("user"))?.token;
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // const res = await axios.get("http://localhost:5000/api/auth/me", {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
+
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/auth/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         // Adjust path if needed
         const data = res.data;
         setUser(data);
@@ -170,8 +180,19 @@ const EditProfileForm = ({ onEditClick }) => {
     if (bannerImage) formData.append("bannerImage", bannerImage);
 
     try {
+      // const res = await axios.put(
+      //   "http://localhost:5000/api/auth/update",
+      //   formData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+
       const res = await axios.put(
-        "http://localhost:5000/api/auth/update",
+        `${process.env.REACT_APP_API_URL}/api/auth/update`,
         formData,
         {
           headers: {
