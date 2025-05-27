@@ -21,9 +21,8 @@ const Login = () => {
       //   "http://localhost:5000/api/auth/login",
       //   form
       // );
-
-      // const baseURL =
-      process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+      const baseURL =
+        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
       console.log("API base URL:", baseURL);
       const res = await axios.post(`${baseURL}/api/auth/login`, form);
 
@@ -42,7 +41,7 @@ const Login = () => {
         },
       });
 
-      // Step 3: Save token + full user info to localStorage
+      // Step 3: Save token + full user info to localStoragee
       localStorage.setItem(
         "user",
         JSON.stringify({
