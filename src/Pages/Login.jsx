@@ -17,12 +17,14 @@ const Login = () => {
 
     try {
       // Step 1: Login and get token
-      const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const res = await axios.post(`${API}/api/auth/login`, form);
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        form
+      );
       const { token } = res.data;
 
       // Step 2: Fetch full user profile using token
-      const profileRes = await axios.get(`${API}/api/auth/me`, {
+      const profileRes = await axios.get("http://localhost:5000/api/auth/me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,12 +41,7 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      const serverError = err.response?.data?.error;
-      const errorMessage =
-        typeof serverError === "string"
-          ? serverError
-          : serverError?.message || "Something went wrong. Try again.";
-      setError(errorMessage);
+      setError(err.response?.data?.error || "Something went wrong. Try again.");
     }
   };
 

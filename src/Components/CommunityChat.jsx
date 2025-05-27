@@ -21,9 +21,7 @@ const CommunityChat = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/chat`
-      );
+      const res = await axios.get("http://localhost:5000/api/chat");
       if (Array.isArray(res.data)) {
         setMessages(res.data);
       } else {
@@ -48,7 +46,7 @@ const CommunityChat = () => {
       }
 
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/chat`,
+        "http://localhost:5000/api/chat",
         { message },
         {
           headers: { Authorization: `Bearer ${token}` },
