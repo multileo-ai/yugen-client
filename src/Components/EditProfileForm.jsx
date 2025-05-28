@@ -81,7 +81,7 @@ const EditProfileForm = () => {
     }
   };
 
-  eturn(
+  return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-2xl">
         <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
