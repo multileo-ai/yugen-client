@@ -163,9 +163,6 @@ const EditProfileForm = ({ onEditClick }) => {
               Personal Information
             </h2>
             <div className="grid grid-cols-2 gap-4">
-              <h2 className="text-3xl font-bold text-[#6D6AEF] mb-6 text-center">
-                Personal Information
-              </h2>
               <div>
                 <label className="block text-sm font-semibold mb-1">Name</label>
                 <input
