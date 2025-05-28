@@ -142,7 +142,7 @@ const EditProfileForm = ({ onEditClick }) => {
   };
 
   return (
-    <div className="flex gap-6 mt-[30px] ml-[30px] max-h-[calc(100vh-60px)] overflow-hidden pr-2">
+    <div className="flex gap-6 mt-[30px] ml-[30px] max-h-[80vh] overflow-hidden pr-2">
       <div className="w-[970px] max-h-[calc(100vh-80px)] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col relative overflow-hidden">
         {/* Close Button */}
         <div
