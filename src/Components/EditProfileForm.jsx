@@ -301,6 +301,7 @@ const EditProfileForm = ({ onEditClick }) => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setProfileImage(e.target.files[0])}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
                 {profileImage && (
                   <div className="mt-2 text-sm text-gray-600">
@@ -314,6 +315,7 @@ const EditProfileForm = ({ onEditClick }) => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => setBannerImage(e.target.files[0])}
+                  className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
                 {bannerImage && (
                   <div className="mt-2 text-sm text-gray-600">
