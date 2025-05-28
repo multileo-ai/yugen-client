@@ -142,12 +142,11 @@ const EditProfileForm = ({ onEditClick }) => {
   };
 
   return (
-    <div className="flex gap-6 mt-[30px] ml-[30px] max-h-[80vh] overflow-x-hidden pr-2 scroll-hidden">
-      <div className="w-[970px] min-h-[360px] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col justify-between relative">
+    <div className="flex gap-6 mt-[30px] ml-[30px] max-h-[calc(100vh-60px)] overflow-hidden pr-2">
+      <div className="w-[970px] max-h-[calc(100vh-80px)] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col relative overflow-hidden">
         {/* Close Button */}
-
         <div
-          className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
+          className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer z-10"
           onClick={onEditClick}
         >
           <img
@@ -161,9 +160,9 @@ const EditProfileForm = ({ onEditClick }) => {
           Personal Information
         </h2>
 
-        {/* Form */}
-        <div className="w-full pl-10 pr-10 flex flex-col justify-center bg-white overflow-y-auto absolute">
-          <form className="space-y-4" onSubmit={handleSubmit}>
+        {/* Scrollable form section */}
+        <div className="flex-1 overflow-y-auto px-10">
+          <form className="space-y-4 pb-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold mb-1">Name</label>
