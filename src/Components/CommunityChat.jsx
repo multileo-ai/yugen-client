@@ -20,19 +20,27 @@ const CommunityChat = ({ onUserClick }) => {
     return () => clearInterval(interval); // Clean up on unmount
   }, []);
 
+  // const res = await axios.get("http://localhost:5000/api/chat");
+
   const fetchMessages = async () => {
     try {
-      // const res = await axios.get("http://localhost:5000/api/chat");
-
       const baseURL =
         process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-      console.log("API base URL:", baseURL);
-      const res = await axios.post(`${baseURL}/api/chat`);
+
+      const token = currentUser?.token;
+      const res = await axios.post(
+        `${baseURL}/api/chat`,
+        {}, // body (empty in this case)
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (Array.isArray(res.data)) {
         setMessages((prevMessages) => {
           const newMessages = res.data;
-          // Check if new messages added
           if (newMessages.length > prevMessages.length && isNearBottom()) {
             setTimeout(
               () => bottomRef.current?.scrollIntoView({ behavior: "smooth" }),
@@ -45,7 +53,7 @@ const CommunityChat = ({ onUserClick }) => {
         setMessages([]);
       }
     } catch (err) {
-      setMessages([]);
+      console.error("Failed to fetch messages:", err.response?.data || err);
     }
   };
 
