@@ -112,7 +112,7 @@ const ProfileLeftTab = ({
             src={
               user._id
                 ? `${baseURL}/api/auth/image/${user._id}/profileImage`
-                : "/default_profile.png"
+                : "/default_pfp.png"
             }
             alt="Profile"
             className="w-full h-full rounded-[30px] object-cover"

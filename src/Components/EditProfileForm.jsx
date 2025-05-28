@@ -81,7 +81,7 @@ const EditProfileForm = () => {
     }
   };
 
-  return (
+  eturn(
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-2xl">
         <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
@@ -93,7 +93,6 @@ const EditProfileForm = () => {
               className="border p-2 rounded"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
             />
             <input
               type="text"
@@ -101,7 +100,6 @@ const EditProfileForm = () => {
               className="border p-2 rounded"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              required
             />
             <input
               type="text"
@@ -126,21 +124,18 @@ const EditProfileForm = () => {
             onChange={(e) => setBio(e.target.value)}
           />
 
+          {/* Skills input (simplified for now) */}
           <input
             type="text"
             placeholder="Skills (comma separated)"
             className="border p-2 rounded w-full mt-4"
             value={skills.join(", ")}
             onChange={(e) =>
-              setSkills(
-                e.target.value
-                  .split(",")
-                  .map((skill) => skill.trim())
-                  .filter(Boolean)
-              )
+              setSkills(e.target.value.split(",").map((s) => s.trim()))
             }
           />
 
+          {/* Profile & Banner Image Uploads */}
           <div className="mt-4">
             <label className="block mb-1 font-medium">Profile Image</label>
             <input
