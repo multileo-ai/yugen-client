@@ -21,6 +21,8 @@ const ChatBot = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatIdCounter, setChatIdCounter] = useState(1);
   const [activeChatId, setActiveChatId] = useState(null);
+  const baseURL =
+    process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
 
   const toggleTask = (index) => {
     setCompletedTasks((prev) => ({
@@ -168,6 +170,23 @@ YOUR RESPONSE MUST BE:
           chat: todo,
         },
       ]);
+
+      await fetch("/api/user/aichat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: localStorage.getItem("userId"), // or however you're storing it
+          chatSession: {
+            id: chatId,
+            title,
+            usermsg: userMsg,
+            chat: todo,
+          },
+        }),
+      });
+
       setChatIdCounter(chatId + 1);
       setActiveChatId(chatId);
     } catch (error) {
@@ -205,6 +224,17 @@ YOUR RESPONSE MUST BE:
     setDisabled(true);
     setActiveChatId(chat.id);
   };
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const res = await fetch(
+        `${baseURL}/api/user/aichat/${localStorage.getItem("userId")}`
+      );
+      const data = await res.json();
+      setChatHistory(data);
+    };
+    fetchHistory();
+  }, []);
 
   const generateShortTitle = async (userMsg) => {
     const prompt = `Give me a very short title (3 to 5 words max) summarizing this project idea:\n"${userMsg}".\nRespond ONLY with the title — no quotes, no punctuation, no explanation.`;
