@@ -228,7 +228,7 @@ YOUR RESPONSE MUST BE:
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const userId = localStorage.getItem("id");
+      const userId = localStorage.getItem("user.id");
       if (!userId) {
         console.warn("No userId found in localStorage");
         return;
