@@ -1,13 +1,46 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const ALL_SKILLS = [
+  "JavaScript",
+  "React",
+  "Node.js",
+  "Python",
+  "Django",
+  "CSS",
+  "HTML",
+  "MongoDB",
+  "SQL",
+  "Java",
+  "C++",
+  "AWS",
+  "Docker",
+  "Kubernetes",
+  "TypeScript",
+  "Go",
+  "Ruby",
+  "Swift",
+  "PHP",
+  "Angular",
+  "Vue.js",
+]; // example skills list for search dropdown
+
 const EditProfileForm = ({ onEditClick }) => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [phone, setPhone] = useState("");
-  const [dob, setDob] = useState("");
-  const [skills, setSkills] = useState([]);
+  // Form state object to hold text inputs
+  const [form, setForm] = useState({
+    name: "",
+    username: "",
+    email: "", // you had email input in the second code but not in first
+    phone: "",
+    dob: "",
+    bio: "",
+  });
+
+  // Skills state
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Image file states
   const [profileImage, setProfileImage] = useState(null);
   const [bannerImage, setBannerImage] = useState(null);
 
@@ -15,6 +48,24 @@ const EditProfileForm = ({ onEditClick }) => {
   const token = storedUser?.token;
   const baseURL =
     process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+
+  // Filter skills by searchTerm (case-insensitive)
+  const displayedSkills = ALL_SKILLS.filter((skill) =>
+    skill.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Toggle skill selection
+  const toggleSkill = (skill) => {
+    setSelectedSkills((prev) =>
+      prev.includes(skill) ? prev.filter((s) => s !== skill) : [...prev, skill]
+    );
+  };
+
+  // Handle input change for form object
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   // Load current user data on mount
   useEffect(() => {
@@ -26,12 +77,15 @@ const EditProfileForm = ({ onEditClick }) => {
       })
       .then((res) => {
         const user = res.data;
-        setName(user.name || "");
-        setUsername(user.username || "");
-        setBio(user.bio || "");
-        setPhone(user.phone || "");
-        setDob(user.dob ? user.dob.split("T")[0] : "");
-        setSkills(user.skills || []);
+        setForm({
+          name: user.name || "",
+          username: user.username || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          dob: user.dob ? user.dob.split("T")[0] : "",
+          bio: user.bio || "",
+        });
+        setSelectedSkills(user.skills || []);
       })
       .catch((err) => {
         console.error("Failed to fetch user data:", err);
@@ -41,18 +95,23 @@ const EditProfileForm = ({ onEditClick }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (profileImage?.size > 500 * 1024 || bannerImage?.size > 500 * 1024) {
+    // Image size validation
+    if (
+      (profileImage && profileImage.size > 500 * 1024) ||
+      (bannerImage && bannerImage.size > 500 * 1024)
+    ) {
       alert("Image size should be under 500KB");
       return;
     }
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("username", username);
-    formData.append("bio", bio);
-    formData.append("phone", phone);
-    formData.append("dob", dob);
-    formData.append("skills", JSON.stringify(skills));
+    formData.append("name", form.name);
+    formData.append("username", form.username);
+    formData.append("email", form.email);
+    formData.append("phone", form.phone);
+    formData.append("dob", form.dob);
+    formData.append("bio", form.bio);
+    formData.append("skills", JSON.stringify(selectedSkills));
     if (profileImage) formData.append("profileImage", profileImage);
     if (bannerImage) formData.append("bannerImage", bannerImage);
 
@@ -73,6 +132,7 @@ const EditProfileForm = ({ onEditClick }) => {
 
       alert("Profile updated successfully!");
 
+      // Reset images
       setProfileImage(null);
       setBannerImage(null);
     } catch (err) {
@@ -113,6 +173,7 @@ const EditProfileForm = ({ onEditClick }) => {
                   onChange={handleChange}
                   placeholder="Enter your name"
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6D6AEF]"
+                  required
                 />
               </div>
               <div>
@@ -126,6 +187,7 @@ const EditProfileForm = ({ onEditClick }) => {
                   onChange={handleChange}
                   placeholder="Choose a unique username"
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6D6AEF]"
+                  required
                 />
               </div>
             </div>
@@ -142,6 +204,7 @@ const EditProfileForm = ({ onEditClick }) => {
                   onChange={handleChange}
                   placeholder="Enter your email"
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6D6AEF]"
+                  required
                 />
               </div>
               <div>
@@ -206,7 +269,7 @@ const EditProfileForm = ({ onEditClick }) => {
                           toggleSkill(skill);
                           setSearchTerm("");
                         }}
-                        className="cursor-pointer text-center px-[5px] py-[3px] rounded text-sm bg-[#f0f0f0] hover:bg-[#6D6AEF] hover:text-white"
+                        className="cursor-pointer rounded-md bg-[#6D6AEF] text-white px-2 py-1 text-center hover:bg-[#5653d4]"
                       >
                         {skill}
                       </div>
@@ -214,48 +277,55 @@ const EditProfileForm = ({ onEditClick }) => {
                 </div>
               )}
 
-              <div className="mt-2 flex flex-wrap gap-2">
+              {/* Selected skills */}
+              <div className="flex flex-wrap gap-2 mt-2">
                 {selectedSkills.map((skill) => (
                   <div
                     key={skill}
                     onClick={() => toggleSkill(skill)}
-                    className="bg-[#6D6AEF] text-white px-2 py-1 rounded text-xs cursor-pointer hover:bg-[#5a58d6]"
+                    className="cursor-pointer rounded-md border border-[#6D6AEF] bg-white px-3 py-1 text-[#6D6AEF] hover:bg-[#6D6AEF] hover:text-white"
                   >
-                    {skill}
+                    {skill} &times;
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Profile and Banner Upload */}
-            <div className="grid grid-cols-2 gap-4 mt-8">
+            {/* Image upload section */}
+            <div className="flex gap-8 mt-6">
               <div>
-                <label className="block text-sm font-semibold mb-1">
-                  Profile Picture
+                <label className="block font-semibold mb-1">
+                  Profile Image
                 </label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setProfileImage(e.target.files[0])}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
+                {profileImage && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Selected: {profileImage.name}
+                  </div>
+                )}
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1">
-                  Banner Image
-                </label>
+                <label className="block font-semibold mb-1">Banner Image</label>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => setBannerImage(e.target.files[0])}
-                  className="w-full border border-gray-300 rounded-md px-4 py-2"
                 />
+                {bannerImage && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Selected: {bannerImage.name}
+                  </div>
+                )}
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-[#6D6AEF] text-white py-2 rounded-md hover:bg-[#5a58d6] transition"
+              className="w-full mt-8 py-3 rounded-md bg-[#6D6AEF] text-white font-semibold hover:bg-[#5653d4] transition"
             >
               Save Changes
             </button>
