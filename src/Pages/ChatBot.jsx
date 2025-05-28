@@ -22,6 +22,8 @@ const ChatBot = () => {
   const [chatHistory, setChatHistory] = useState([]);
   const [chatIdCounter, setChatIdCounter] = useState(1);
   const [activeChatId, setActiveChatId] = useState(null);
+  const [userId, setUserId] = useState(null);
+
   const baseURL =
     process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
 
@@ -209,6 +211,21 @@ YOUR RESPONSE MUST BE:
     }
   };
 
+  const fetchChatbotHistory = async (uid) => {
+    try {
+      const response = await fetch(`${baseURL}/api/user/aichat/${uid}`);
+      const data = await response.json();
+      if (data && Array.isArray(data)) {
+        setChatHistory(data);
+        if (data.length > 0) {
+          setChatIdCounter(Math.max(...data.map((chat) => chat.id)) + 1);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch chat history:", error);
+    }
+  };
+
   const startNewChat = () => {
     setMessage("");
     setMessages([]);
@@ -227,26 +244,14 @@ YOUR RESPONSE MUST BE:
   };
 
   useEffect(() => {
-    const fetchHistory = async () => {
-      const userId = localStorage.getItem("user.id");
-      if (!userId) {
-        console.warn("No userId found in localStorage");
-        return;
-      }
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || !user._id) {
+      console.error("No userId found in localStorage");
+      return;
+    }
 
-      try {
-        const res = await fetch(`${baseURL}/api/user/aichat/${userId}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch chat history: ${res.status}`);
-        }
-        const data = await res.json();
-        setChatHistory(data);
-      } catch (error) {
-        console.error("Error loading chat history:", error.message);
-      }
-    };
-
-    fetchHistory();
+    setUserId(user._id); // assuming you're using useState
+    fetchChatbotHistory(user._id);
   }, []);
 
   const generateShortTitle = async (userMsg) => {
