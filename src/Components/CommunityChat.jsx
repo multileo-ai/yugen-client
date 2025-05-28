@@ -28,7 +28,7 @@ const CommunityChat = ({ onUserClick }) => {
         process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
 
       const token = currentUser?.token;
-      const res = await axios.post(
+      const res = await axios.get(
         `${baseURL}/api/chat`,
         {}, // body (empty in this case)
         {
