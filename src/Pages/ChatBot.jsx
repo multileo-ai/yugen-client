@@ -172,13 +172,13 @@ YOUR RESPONSE MUST BE:
         },
       ]);
 
-      await fetch("/api/user/aichat", {
+      await fetch(`${baseURL}/api/user/aichat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: localStorage.getItem("userId"), // or however you're storing it
+          userId: localStorage.getItem("userId") || "guest",
           chatSession: {
             id: chatId,
             title,
@@ -228,12 +228,24 @@ YOUR RESPONSE MUST BE:
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const res = await fetch(
-        `${baseURL}/api/user/aichat/${localStorage.getItem("userId")}`
-      );
-      const data = await res.json();
-      setChatHistory(data);
+      const userId = localStorage.getItem("id");
+      if (!userId) {
+        console.warn("No userId found in localStorage");
+        return;
+      }
+
+      try {
+        const res = await fetch(`${baseURL}/api/user/aichat/${userId}`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch chat history: ${res.status}`);
+        }
+        const data = await res.json();
+        setChatHistory(data);
+      } catch (error) {
+        console.error("Error loading chat history:", error.message);
+      }
     };
+
     fetchHistory();
   }, []);
 
