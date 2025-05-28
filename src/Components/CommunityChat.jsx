@@ -3,6 +3,9 @@ import { IoSend } from "react-icons/io5";
 import axios from "axios";
 
 const CommunityChat = ({ onUserClick }) => {
+  const baseURL =
+    process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const bottomRef = useRef(null);
@@ -24,9 +27,6 @@ const CommunityChat = ({ onUserClick }) => {
 
   const fetchMessages = async () => {
     try {
-      const baseURL =
-        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-
       const token = currentUser?.token;
       const res = await axios.get(
         `${baseURL}/api/chat`,
