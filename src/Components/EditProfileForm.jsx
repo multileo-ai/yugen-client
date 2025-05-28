@@ -157,8 +157,8 @@ const EditProfileForm = ({ onEditClick }) => {
         </div>
 
         {/* Form */}
-        <div className="w-full pl-10 pr-10 pt-10 flex flex-col justify-center bg-white max-h-full overflow-y-auto">
-          <h2 className="text-3xl font-bold text-[#6D6AEF] mb-6 text-center">
+        <div className="w-full pl-10 pr-10 pt-24 flex flex-col justify-center bg-white max-h-full overflow-y-auto">
+          <h2 className="text-3xl font-bold text-[#6D6AEF] text-center">
             Personal Information
           </h2>
 
