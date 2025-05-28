@@ -162,7 +162,7 @@ const EditProfileForm = ({ onEditClick }) => {
         </h2>
 
         {/* Form */}
-        <div className="w-full pl-10 pr-10 flex flex-col justify-center bg-white overflow-y-auto">
+        <div className="w-full pl-10 pr-10 flex flex-col justify-center bg-white overflow-y-auto absolute">
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-2 gap-4">
               <div>
