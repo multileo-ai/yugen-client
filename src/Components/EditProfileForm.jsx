@@ -148,16 +148,6 @@ const EditProfileForm = ({ onEditClick }) => {
         <h2 className="text-3xl font-bold text-[#6D6AEF] mb-6 text-center">
           Personal Information
         </h2>
-        <div
-          className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
-          onClick={onEditClick}
-        >
-          <img
-            src="cross-black.png"
-            alt="close"
-            className="w-[20px] h-[20px]"
-          />
-        </div>
 
         {/* Form */}
         <div className="w-full pl-10 pr-10 pt-24 flex flex-col justify-center bg-white max-h-full overflow-y-auto">
