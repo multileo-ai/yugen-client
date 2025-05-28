@@ -73,7 +73,12 @@ const ProfileLeftTab = ({
       <div className="w-[360px] h-[30%] rounded-t-[50px] relative overflow-hidden">
         <img
           // src={`${API_BASE_URL}${user.bannerImage || "/default_banner.png"}`}
-          src={`${baseURL}/api/auth/image/${userId}/bannerImage`}
+          // src={`${baseURL}/api/auth/image/${userId}/bannerImage`}
+          src={
+            user._id
+              ? `${baseURL}/api/auth/image/${user._id}/bannerImage`
+              : "/default_banner.png"
+          }
           alt="banner"
           className="w-full h-full object-cover rounded-t-[50px]"
         />
@@ -103,7 +108,12 @@ const ProfileLeftTab = ({
       <div className="flex justify-center items-center relative -mt-[60px] z-10">
         <div className="w-[120px] h-[120px] rounded-[30px] border-4 border-white overflow-hidden shadow-lg">
           <img
-            src={`${baseURL}/api/auth/image/${userId}/profileImage`}
+            // src={`${baseURL}/api/auth/image/${userId}/profileImage`}
+            src={
+              user._id
+                ? `${baseURL}/api/auth/image/${user._id}/profileImage`
+                : "/default_profile.png"
+            }
             alt="Profile"
             className="w-full h-full rounded-[30px] object-cover"
           />
