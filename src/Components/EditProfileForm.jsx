@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const EditProfileForm = () => {
   const [name, setName] = useState("");
@@ -10,6 +11,33 @@ const EditProfileForm = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [bannerImage, setBannerImage] = useState(null);
 
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const token = storedUser?.token;
+  const baseURL =
+    process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+
+  // Load current user data on mount
+  useEffect(() => {
+    if (!token) return;
+
+    axios
+      .get(`${baseURL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const user = res.data;
+        setName(user.name || "");
+        setUsername(user.username || "");
+        setBio(user.bio || "");
+        setPhone(user.phone || "");
+        setDob(user.dob ? user.dob.split("T")[0] : "");
+        setSkills(user.skills || []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user data:", err);
+      });
+  }, [token, baseURL]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -17,12 +45,6 @@ const EditProfileForm = () => {
       alert("Image size should be under 500KB");
       return;
     }
-
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    const token = storedUser?.token;
-    const baseURL =
-      process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-    console.log("API base URL:", baseURL);
 
     const formData = new FormData();
     formData.append("name", name);
@@ -35,27 +57,27 @@ const EditProfileForm = () => {
     if (bannerImage) formData.append("bannerImage", bannerImage);
 
     try {
-      const res = await axios.post(`${baseURL}/api/auth/update`, formData, {
+      const res = await axios.put(`${baseURL}/api/auth/update`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
 
+      // Update localStorage user info (keep token)
       const updatedUser = {
+        ...storedUser,
         ...res.data,
-        token: storedUser.token,
       };
-
       localStorage.setItem("user", JSON.stringify(updatedUser));
+
       alert("Profile updated successfully!");
 
-      // ✅ Reset image states after successful upload
       setProfileImage(null);
       setBannerImage(null);
     } catch (err) {
       console.error("Update error:", err);
-      alert("Failed to update profile.");
+      alert(err.response?.data?.message || "Failed to update profile.");
     }
   };
 
@@ -71,6 +93,7 @@ const EditProfileForm = () => {
               className="border p-2 rounded"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              required
             />
             <input
               type="text"
@@ -78,6 +101,7 @@ const EditProfileForm = () => {
               className="border p-2 rounded"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              required
             />
             <input
               type="text"
@@ -102,18 +126,21 @@ const EditProfileForm = () => {
             onChange={(e) => setBio(e.target.value)}
           />
 
-          {/* Skills input (simplified for now) */}
           <input
             type="text"
             placeholder="Skills (comma separated)"
             className="border p-2 rounded w-full mt-4"
             value={skills.join(", ")}
             onChange={(e) =>
-              setSkills(e.target.value.split(",").map((s) => s.trim()))
+              setSkills(
+                e.target.value
+                  .split(",")
+                  .map((skill) => skill.trim())
+                  .filter(Boolean)
+              )
             }
           />
 
-          {/* Profile & Banner Image Uploads */}
           <div className="mt-4">
             <label className="block mb-1 font-medium">Profile Image</label>
             <input
