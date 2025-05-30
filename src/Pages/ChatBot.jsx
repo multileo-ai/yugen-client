@@ -214,6 +214,7 @@ YOUR RESPONSE MUST BE:
   const fetchChatbotHistory = async (uid) => {
     try {
       const response = await fetch(`${baseURL}/api/user/aichat/${uid}`);
+
       const data = await response.json();
       if (data && Array.isArray(data)) {
         setChatHistory(data);

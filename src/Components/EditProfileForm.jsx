@@ -332,7 +332,7 @@ const EditProfileForm = ({ onEditClick }) => {
               Save Changes
             </button>
           </form>
-        </div>
+        </div> 
       </div>
     </div>
   );
