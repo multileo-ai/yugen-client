@@ -166,7 +166,7 @@ YOUR RESPONSE MUST BE:
       setChatHistory((prev) => [...prev, newChat]);
 
       if (userId && userId !== "guest") {
-        await axios.post(`${baseURL}/api/aichat`, {
+        await axios.post(`${baseURL}/api/user/aichat`, {
           userId,
           chatSession: newChat,
         });
@@ -193,9 +193,9 @@ YOUR RESPONSE MUST BE:
 
   const fetchChatbotHistory = async (uid) => {
     try {
-      const response = await fetch(`${baseURL}/api/aichat/${uid}`);
+      const response = await axios.get(`${baseURL}/api/user/aichat/${uid}`);
+      const data = response.data;
 
-      const data = await response.json();
       if (data && Array.isArray(data)) {
         setChatHistory(data);
         if (data.length > 0) {
