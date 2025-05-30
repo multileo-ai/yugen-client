@@ -167,21 +167,29 @@ YOUR RESPONSE MUST BE:
         },
       ]);
 
-      await fetch(`${baseURL}/api/user/aichat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: localStorage.getItem("userId") || "guest",
+      const token = storedUser?.token; // If you use a token
+      const userId = localStorage.getItem("userId") || "guest";
+
+      const response = await axios.post(
+        `${baseURL}/api/user/aichat`,
+        {
+          userId,
           chatSession: {
             id: chatId,
             title,
             usermsg: userMsg,
             chat: todo,
           },
-        }),
-      });
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }), // Optional
+          },
+        }
+      );
+
+      console.log("Success:", response.data);
 
       setChatIdCounter(chatId + 1);
       setActiveChatId(chatId);
