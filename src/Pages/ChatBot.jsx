@@ -193,6 +193,10 @@ YOUR RESPONSE MUST BE:
 
   const fetchChatbotHistory = async (uid) => {
     try {
+      console.log(
+        "Fetching chat history from:",
+        `${baseURL}/api/user/aichat/${uid}`
+      );
       const response = await axios.get(`${baseURL}/api/user/aichat/${uid}`);
       const data = response.data;
 
@@ -203,7 +207,11 @@ YOUR RESPONSE MUST BE:
         }
       }
     } catch (error) {
-      console.error("Failed to fetch chat history:", error);
+      console.error("❌ Failed to fetch chat history:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Status code:", error.response.status);
+      }
     }
   };
 
@@ -231,7 +239,8 @@ YOUR RESPONSE MUST BE:
       return;
     }
     setUserId(stored._id);
-    fetchChatbotHistory(stored._id);
+    fetchChatbotHistory(stored._id); // 👈 this must be a real ID
+    console.log("User ID to fetch chat history for:", stored._id);
   }, []);
 
   const generateShortTitle = async (userMsg) => {
