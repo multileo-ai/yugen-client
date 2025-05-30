@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 import { IoAdd, IoChatbubble, IoSend, IoStar } from "react-icons/io5";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { FaRegCircle, FaCheckCircle } from "react-icons/fa";
@@ -138,15 +138,12 @@ YOUR RESPONSE MUST BE:
 - Maintain this level of detail regardless of project type`;
 
     try {
-      const genAI = new GoogleGenerativeAI(
-        "AIzaSyCaPm8NB9Ft6fpoWYdBJrybYqs586tRnNc"
-      );
+      const genAI = new GoogleGenerativeAI("YOUR_GEMINI_API_KEY");
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent(prompt);
       const rawText = result.response.text();
 
       const title = await generateShortTitle(userMsg);
-
       const todo = extractTodoList(rawText);
 
       if (!Array.isArray(todo) || todo.length === 0) {
@@ -157,49 +154,29 @@ YOUR RESPONSE MUST BE:
       setDisabled(true);
 
       const chatId = chatIdCounter;
-      setChatHistory((prev) => [
-        ...prev,
-        {
-          id: chatId,
-          title,
-          usermsg: userMsg,
-          chat: todo,
-        },
-      ]);
+      const newChat = {
+        id: chatId,
+        title,
+        usermsg: userMsg,
+        chat: todo,
+      };
 
-      const token = storedUser?.token; // If you use a token
-      const userId = localStorage.getItem("userId") || "guest";
+      setChatHistory((prev) => [...prev, newChat]);
 
-      const response = await axios.post(
-        `${baseURL}/api/user/aichat`,
-        {
+      if (userId && userId !== "guest") {
+        await axios.post(`${baseURL}/api/user/aichat`, {
           userId,
-          chatSession: {
-            id: chatId,
-            title,
-            usermsg: userMsg,
-            chat: todo,
-          },
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            ...(token && { Authorization: `Bearer ${token}` }), // Optional
-          },
-        }
-      );
-
-      console.log("Success:", response.data);
+          chatSession: newChat,
+        });
+      }
 
       setChatIdCounter(chatId + 1);
       setActiveChatId(chatId);
     } catch (error) {
+      console.error(error);
       setMessages((prev) => [
         ...prev,
-        {
-          type: "error",
-          text: `❌ ${error.message}`,
-        },
+        { type: "error", text: `❌ ${error.message}` },
       ]);
     } finally {
       setIsGenerating(false);
@@ -246,16 +223,13 @@ YOUR RESPONSE MUST BE:
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !user._id) {
-      console.error("No userId found in localStorage");
+    const stored = JSON.parse(localStorage.getItem("user"));
+    if (!stored || !stored._id) {
+      console.error("No valid user found");
       return;
     }
-
-    setUserId(user._id); // assuming you're using useState
-    fetchChatbotHistory(user._id);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setUserId(stored._id);
+    fetchChatbotHistory(stored._id);
   }, []);
 
   const generateShortTitle = async (userMsg) => {
