@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import {
-  IoAdd,
-  IoChatbubble,
-  IoPencil,
-  IoPencilSharp,
-  IoSend,
-  IoStar,
-} from "react-icons/io5";
+import { IoAdd, IoChatbubble, IoSend, IoStar } from "react-icons/io5";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { FaRegCircle, FaCheckCircle } from "react-icons/fa";
 
@@ -253,6 +246,8 @@ YOUR RESPONSE MUST BE:
 
     setUserId(user._id); // assuming you're using useState
     fetchChatbotHistory(user._id);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const generateShortTitle = async (userMsg) => {
@@ -298,102 +293,87 @@ YOUR RESPONSE MUST BE:
               {todoList.map((task, index) => (
                 <div
                   key={index}
-                  className={`flex items-center gap-2 text-sm ${
-                    completedTasks[index] ? "line-through text-gray-500" : ""
+                  className={`flex items-center gap-2 text-sm rounded p-1 cursor-pointer ${
+                    completedTasks[index] ? "text-gray-400 line-through" : ""
                   }`}
+                  onClick={() => toggleTask(index)}
                 >
-                  <button
-                    onClick={() => toggleTask(index)}
-                    className="mt-[2px]"
-                  >
-                    {completedTasks[index] ? (
-                      <FaCheckCircle className="text-[#6D6AEF]" />
-                    ) : (
-                      <FaRegCircle className="text-[#6D6AEF]" />
-                    )}
-                  </button>
+                  {completedTasks[index] ? (
+                    <FaCheckCircle className="text-green-500" />
+                  ) : (
+                    <FaRegCircle className="text-gray-400" />
+                  )}
                   <span>{task}</span>
-                  <div className="rounded-full w-4 h-4 bg-[#6D6AEF] flex justify-center items-center">
-                    <IoChatbubble size={10} className="text-white" />
-                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <div className="mt-4 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <input
             type="text"
+            placeholder={
+              disabled
+                ? "Start new chat by clicking +"
+                : "Enter your project idea here..."
+            }
             value={message}
+            disabled={disabled}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Enter your problem statement..."
-            className="flex-1 p-3 rounded-xl border border-gray-300 outline-none text-sm"
-            disabled={disabled || isGenerating}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSend();
+              }
+            }}
+            className="flex-grow rounded-lg border border-gray-400 p-2 text-black"
           />
           <button
             onClick={handleSend}
-            disabled={disabled || isGenerating}
-            className={`p-3 rounded-full transition ${
-              disabled || isGenerating
+            disabled={disabled || message.trim() === ""}
+            className={`rounded-lg p-2 ${
+              disabled || message.trim() === ""
                 ? "bg-gray-300 cursor-not-allowed"
-                : "bg-[#6D6AEF] text-white hover:opacity-90"
+                : "bg-[#6D6AEF] text-white"
             }`}
           >
-            <IoSend size={18} />
+            <IoSend size={24} />
           </button>
         </div>
       </div>
 
-      {/* Sidebar */}
-      <div className="flex flex-col gap-3">
-        <div className="border border-black w-[460px] h-[300px] rounded-2xl p-5 flex flex-col">
-          <div className="flex justify-between items-center mb-2">
-            <h1 className="text-md font-semibold">Chat History</h1>
-            <div
-              onClick={startNewChat}
-              className="w-6 h-6 bg-[#d9d9d948] flex justify-center items-center rounded-md cursor-pointer"
-            >
-              <IoAdd size={18} />
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto pr-2 mt-2 space-y-1 scroll-hidden">
-            {chatHistory.map((chat) => (
-              <div
-                key={chat.id}
-                onClick={() => loadChat(chat)}
-                className={`p-2 rounded-md cursor-pointer ${
-                  activeChatId === chat.id ? "bg-[#4f4dd4]" : "bg-[#6D6AEF]"
-                }`}
-              >
-                <strong className="text-white tracking-wider">
-                  {chat.title}
-                </strong>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="w-[240px] flex flex-col border border-black rounded-xl p-4 bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] max-h-[560px] overflow-y-auto">
+        <button
+          className="flex items-center gap-2 mb-4 text-sm text-[#6D6AEF] font-semibold hover:underline"
+          onClick={() => {
+            startNewChat();
+          }}
+        >
+          <IoAdd size={20} />
+          New Chat
+        </button>
 
-        <div className="bg-[#6D6AEF] w-[460px] h-[250px] rounded-2xl p-5 flex flex-col">
-          <div className="flex justify-between mb-2">
-            <div className="bg-white w-6 h-6 rounded-full flex justify-center items-center">
-              <IoStar className="text-[#6D6AEF]" size={14} />
-            </div>
-            <h1 className="text-white">Pro Plan</h1>
-          </div>
+        {chatHistory.length === 0 && (
+          <div className="text-gray-600 text-sm">No chat history yet</div>
+        )}
 
-          <h1 className="text-[40px] text-[white] font-semibold mt-2">
-            ₹ 550 / <span className="text-[20px]">month</span>
-          </h1>
-          <p className="text-[white] text-[14px] mt-2">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Distinctio
-            ipsa numquam sapiente suscipit eum ab!
-          </p>
-          <div className="w-[300px] h-[40px] rounded-full bg-white text-center text-[#6D6AEF] font-semibold flex justify-center items-center cursor-pointer mt-4 ml-14">
-            Subscribe Now
-          </div>
-        </div>
+        {chatHistory.map((chat) => (
+          <button
+            key={chat.id}
+            onClick={() => loadChat(chat)}
+            className={`text-left mb-2 px-3 py-2 rounded hover:bg-[#6D6AEF] hover:text-white transition-colors duration-300 ${
+              chat.id === activeChatId
+                ? "bg-[#6D6AEF] text-white"
+                : "bg-gray-100"
+            }`}
+          >
+            <div className="flex justify-between items-center">
+              <span className="truncate">{chat.title}</span>
+              <IoStar size={18} className="text-yellow-400" />
+            </div>
+            <div className="text-xs text-gray-600 truncate">{chat.usermsg}</div>
+          </button>
+        ))}
       </div>
     </div>
   );
