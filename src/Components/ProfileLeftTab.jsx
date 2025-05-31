@@ -88,35 +88,37 @@ const ProfileLeftTab = ({
           className="w-full h-full object-cover rounded-t-[50px]"
         />
 
-        {selectedUser ? (
+        <div>
+          {selectedUser ? (
+            <div
+              className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
+              onClick={onCloseClick}
+            >
+              <IoClose size={20} />
+            </div>
+          ) : (
+            <div
+              className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
+              onClick={onEditClick}
+            >
+              <img
+                src="/edit-black.png"
+                alt="edit"
+                className="w-[20px] h-[20px]"
+              />
+            </div>
+          )}
+        </div>
+
+        {selectedUser && (
           <div
-            className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
-            onClick={onCloseClick}
+            className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[40px] cursor-pointer"
+            // onClick={handleFollowClick}
           >
-            <IoClose size={20} />
-          </div>
-        ) : (
-          <div
-            className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
-            onClick={onEditClick}
-          >
-            <img
-              src="/edit-black.png"
-              alt="edit"
-              className="w-[20px] h-[20px]"
-            />
+            <IoHeart size={20} className="text-red-500" />
           </div>
         )}
       </div>
-
-      {selectedUser && (
-        <div
-          className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[20px] cursor-pointer"
-          // onClick={handleFollowClick}
-        >
-          <IoHeart size={20} className="text-red-500" />
-        </div>
-      )}
 
       {/* Profile Picture */}
       <div className="flex justify-center items-center relative -mt-[60px] z-10">
