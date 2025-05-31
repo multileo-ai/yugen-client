@@ -15,6 +15,7 @@ const CodeEditor = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [tempFileName, setTempFileName] = useState("");
+  const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   const defaultHtmlComment =
     "<!-- Your HTML code goes here -->\n<!-- Structure your page here -->\n";
@@ -113,7 +114,7 @@ const CodeEditor = () => {
   };
 
   const uploadCode = async () => {
-    const token = localStorage.getItem("token");
+    const token = currentUser?.token;
     if (!token) return alert("You must be logged in.");
 
     const baseURL =
