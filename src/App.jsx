@@ -64,6 +64,7 @@ const App = () => {
 
   return (
     <Layout>
+      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
