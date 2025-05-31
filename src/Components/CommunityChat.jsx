@@ -20,13 +20,6 @@ const CommunityChat = ({ onUserClick }) => {
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
 
   // Extract mentions
-  const mentionedUsernames = [...message.matchAll(/@(\w+)/g)].map((m) => m[1]);
-
-  mentionedUsernames.forEach((username) => {
-    if (username == currentUser.username) {
-      toast(`User @${username} was mentioned!`);
-    }
-  });
 
   useEffect(() => {
     // Fetch all users once
@@ -91,6 +84,16 @@ const CommunityChat = ({ onUserClick }) => {
 
   const handleSend = async () => {
     if (message.trim() === "") return;
+
+    const mentionedUsernames = [...message.matchAll(/@(\w+)/g)].map(
+      (m) => m[1]
+    );
+
+    mentionedUsernames.forEach((username) => {
+      if (username !== currentUser.username) {
+        toast(`User @${username} was mentioned!`);
+      }
+    });
 
     try {
       const token = currentUser.token;
