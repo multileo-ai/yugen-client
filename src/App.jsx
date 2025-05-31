@@ -53,7 +53,16 @@ const App = () => {
 
     // ✅ Listen for real-time notifications
     socket.on("new-notification", (data) => {
-      toast.success(data.message); // Show toast on follow
+      toast.custom((t) => (
+        <div
+          className={`bg-white border shadow-md rounded p-4 ${
+            t.visible ? "animate-enter" : "animate-leave"
+          }`}
+        >
+          <strong>🔔 Notification</strong>
+          <p>{t.message}</p>
+        </div>
+      ));
     });
 
     // Cleanup on unmount
