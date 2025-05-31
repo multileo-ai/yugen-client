@@ -68,14 +68,10 @@ const App = () => {
               <div className="flex-shrink-0 pt-0.5">
                 <img
                   className="h-10 w-10 rounded-full"
+                  src={user?.profileImageUrl || "/default_pfp.jpg"}
                   onError={(e) => {
-                    e.target.src = "/default-pfp.jpg"; // Fallback image
+                    e.target.src = "/default_pfp.jpg";
                   }}
-                  src={
-                    user._id
-                      ? `${baseURL}/api/auth/image/${user._id}/profileImage`
-                      : "/default_pfp.jpg"
-                  }
                   alt={user.name}
                 />
               </div>
