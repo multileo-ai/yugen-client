@@ -12,6 +12,7 @@ const Login = () => {
 
     if (!form.identifier || !form.password) {
       setError("Please enter username/email and password.");
+      toast.error("Please enter username/email and password.");
       return;
     }
 
@@ -49,10 +50,13 @@ const Login = () => {
           ...profileRes.data,
         })
       );
-
+      toast.success("Login successful!");
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong. Try again.");
+      toast.error(
+        err.response?.data?.error || "Something went wrong. Try again."
+      );
     }
   };
 

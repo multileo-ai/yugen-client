@@ -24,9 +24,13 @@ const Signup = () => {
       // await axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, form);
 
       alert("Signup successful!");
+      toast.success("Signup successful! Please login to continue.");
       navigate("/login");
     } catch (err) {
       alert(err.response?.data?.error || "Signup failed");
+      toast.error(
+        err.response?.data?.error || "Signup failed. Please try again."
+      );
     }
   };
 

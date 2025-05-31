@@ -37,9 +37,9 @@ const Dashboard = () => {
         {/* Folder Section */}
         <div className="flex  gap-4 mr-[50px]">
           <NewFolder />
-          <Folder />
-          <Folder />
-          <Folder />
+          <Folder name="Thinking..." />
+          <Folder name="My Workspace" />
+          <Folder name="Daily Tasks" />
         </div>
       </div>
 
