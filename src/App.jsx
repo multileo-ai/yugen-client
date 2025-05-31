@@ -11,7 +11,7 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Landing from "./Pages/Landing"; // you'll create this
 import "./App.css";
-import PrivateRoute from "./Components/PrivateRoute";
+// import PrivateRoute from "./Components/PrivateRoute";
 import Community from "./Pages/Community";
 
 const Layout = ({ children }) => {
@@ -51,70 +51,71 @@ const App = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/testing" element={<ChatBot />} />
 
         {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <Dashboard />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/editor"
           element={
-            <PrivateRoute>
-              <CodeEditor />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <CodeEditor />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/editor/:taskId"
           element={
-            <PrivateRoute>
-              <CodeEditor />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <CodeEditor />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/editor-preview/:taskId"
           element={
-            <PrivateRoute>
-              <EditorPage />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <EditorPage />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/preview/:taskId"
           element={
-            <PrivateRoute>
-              <Preview />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <Preview />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/chatbot"
           element={
-            <PrivateRoute>
-              <ChatBot />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <ChatBot />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/community"
           element={
-            <PrivateRoute>
-              <Community />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <Community />
+            // </PrivateRoute>
           }
         />
         <Route
           path="/profile"
           element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
+            // <PrivateRoute>
+            <Profile />
+            // </PrivateRoute>
           }
         />
       </Routes>
