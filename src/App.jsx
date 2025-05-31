@@ -65,6 +65,9 @@ const App = () => {
               <div className="flex-shrink-0 pt-0.5">
                 <img
                   className="h-10 w-10 rounded-full"
+                  onError={(e) => {
+                    e.target.src = "/default-pfp.jpg"; // Fallback image
+                  }}
                   src={`${process.env.REACT_APP_API_URL}/api/user/image/${user._id}/profileImage`}
                   alt={user.name}
                 />
