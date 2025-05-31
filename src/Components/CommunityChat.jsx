@@ -190,7 +190,7 @@ const CommunityChat = ({ onUserClick }) => {
         </div>
 
         {/* Message Input */}
-        <div className="mt-4 flex items-center gap-2">
+        <div className="mt-4 flex items-center gap-2 relative">
           <input
             type="text"
             value={message}
@@ -228,12 +228,11 @@ const CommunityChat = ({ onUserClick }) => {
                   key={user._id}
                   onClick={() => {
                     const before = message.slice(0, mentionStartIndex);
-                    const after = message.slice(
-                      message.indexOf(" ", mentionStartIndex) !== -1
-                        ? message.indexOf(" ", mentionStartIndex)
-                        : message.length
-                    );
-                    setMessage(`${before}@${user.username} ${after}`.trim());
+                    const after = message
+                      .slice(mentionStartIndex)
+                      .replace(/@(\w*)/, "");
+                    setMessage(`${before}@${user.username} ${after}`);
+
                     setMentionSuggestions([]);
                   }}
                   className="px-3 py-2 hover:bg-gray-200 cursor-pointer text-sm"
