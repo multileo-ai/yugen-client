@@ -48,53 +48,47 @@ const App = () => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser?._id) return;
 
-    // ✅ Register user on socket
     socket.emit("register-user", storedUser._id);
 
-    // ✅ Listen for real-time notifications
+    // ✅ Only one listener
     socket.on("new-notification", (data) => {
-      socket.on("new-notification", (data) => {
-        const { message, type, user } = data;
+      const { message, type, user } = data;
 
-        toast.custom((t) => (
-          <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
-          >
-            <div className="flex-1 w-0 p-4">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 pt-0.5">
-                  <img
-                    className="h-10 w-10 rounded-full"
-                    src={`${process.env.REACT_APP_API_URL}/api/user/image/${user._id}/profileImage`}
-                    alt={user.name}
-                  />
-                </div>
-                <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user.name}
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500 whitespace-pre-line">
-                    {message}
-                  </p>
-                </div>
+      toast.custom((t) => (
+        <div
+          className={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+        >
+          <div className="flex-1 w-0 p-4">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 pt-0.5">
+                <img
+                  className="h-10 w-10 rounded-full"
+                  src={`${process.env.REACT_APP_API_URL}/api/user/image/${user._id}/profileImage`}
+                  alt={user.name}
+                />
+              </div>
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                <p className="mt-1 text-sm text-gray-500 whitespace-pre-line">
+                  {message}
+                </p>
               </div>
             </div>
-            <div className="flex border-l border-gray-200">
-              <button
-                onClick={() => toast.dismiss(t.id)}
-                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                Close
-              </button>
-            </div>
           </div>
-        ));
-      });
+          <div className="flex border-l border-gray-200">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ));
     });
 
-    // Cleanup on unmount
     return () => {
       socket.off("new-notification");
     };
