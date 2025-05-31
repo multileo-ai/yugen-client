@@ -53,16 +53,20 @@ const App = () => {
 
     // ✅ Listen for real-time notifications
     socket.on("new-notification", (data) => {
-      toast.custom((t) => (
-        <div
-          className={`bg-white border shadow-md rounded p-4 ${
-            t.visible ? "animate-enter" : "animate-leave"
-          }`}
-        >
-          <strong>🔔 Notification</strong>
-          <p>{t.message}</p>
-        </div>
-      ));
+      socket.on("new-notification", (data) => {
+        console.log("🔔 Incoming notification via socket:", data);
+        const msg = data.message || "You have a new notification";
+        toast.custom((t) => (
+          <div
+            className={`bg-white border shadow-md rounded p-4 text-sm max-w-xs ${
+              t.visible ? "animate-enter" : "animate-leave"
+            }`}
+          >
+            <strong className="block mb-1">🔔 Notification</strong>
+            <p>{data.message}</p>
+          </div>
+        ));
+      });
     });
 
     // Cleanup on unmount
