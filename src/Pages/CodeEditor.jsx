@@ -117,15 +117,35 @@ const CodeEditor = () => {
     const token = currentUser?.token;
     if (!token) return alert("You must be logged in.");
 
+    const trimmedFileName = fileName.trim();
+    const isHtmlValid =
+      html.trim() !== "" && html.trim() !== defaultHtmlComment.trim();
+    const isCssValid =
+      css.trim() !== "" && css.trim() !== defaultCssComment.trim();
+    const isJsValid = js.trim() !== "" && js.trim() !== defaultJsComment.trim();
+
+    // ✅ Check: file name must be entered
+    if (!trimmedFileName || trimmedFileName === "Enter File Name") {
+      alert("Please enter a valid file name before uploading.");
+      setTempFileName(fileName);
+      setShowPopup(true); // show rename popup
+      return;
+    }
+
+    // ✅ Check: at least one editor must have content
+    if (!isHtmlValid && !isCssValid && !isJsValid) {
+      alert("Please write code in at least one of the boxes before uploading.");
+      return;
+    }
+
     const baseURL =
       process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-    console.log("API base URL:", baseURL);
 
     try {
       const res = await axios.post(
-        `${baseURL}/api/code`,
+        `${baseURL}/api/auth/code`,
         {
-          title: fileName,
+          title: trimmedFileName,
           html,
           css,
           js,
