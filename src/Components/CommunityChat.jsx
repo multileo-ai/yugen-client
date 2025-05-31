@@ -222,7 +222,7 @@ const CommunityChat = ({ onUserClick }) => {
             className="flex-1 p-3 rounded-xl border border-gray-300 outline-none text-sm"
           />
           {mentionSuggestions.length > 0 && (
-            <div className="absolute bottom-16 bg-white border rounded-md shadow-md w-[200px] max-h-[150px] overflow-y-auto z-50">
+            <div className="absolute top-full left-0 mt-1 bg-white border rounded-md shadow-md w-[200px] max-h-[150px] overflow-y-auto z-50">
               {mentionSuggestions.map((user) => (
                 <div
                   key={user._id}
@@ -232,7 +232,6 @@ const CommunityChat = ({ onUserClick }) => {
                       .slice(mentionStartIndex)
                       .replace(/@(\w*)/, "");
                     setMessage(`${before}@${user.username} ${after}`);
-
                     setMentionSuggestions([]);
                   }}
                   className="px-3 py-2 hover:bg-gray-200 cursor-pointer text-sm"
