@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
-import { IoClose, IoHeart } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 const ProfileLeftTab = ({
   onEditClick,
@@ -93,7 +93,7 @@ const ProfileLeftTab = ({
             className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
             onClick={onCloseClick}
           >
-            <IoHeart size={20} />
+            <IoClose size={20} />
           </div>
         ) : (
           <div
@@ -108,6 +108,15 @@ const ProfileLeftTab = ({
           </div>
         )}
       </div>
+
+      {selectedUser && (
+        <div
+          className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[20px] cursor-pointer"
+          onClick={handleFollowClick}
+        >
+          <IoHeart size={20} className="text-red-500" />
+        </div>
+      )}
 
       {/* Profile Picture */}
       <div className="flex justify-center items-center relative -mt-[60px] z-10">
