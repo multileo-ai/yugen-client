@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const ALL_SKILLS = [
   "JavaScript",
@@ -88,7 +89,7 @@ const EditProfileForm = ({ onEditClick }) => {
         setSelectedSkills(user.skills || []);
       })
       .catch((err) => {
-        console.error("Failed to fetch user data:", err);
+        toast.error(err.response?.data?.error || "Failed to load user data.");
       });
   }, [token, baseURL]);
 
@@ -100,7 +101,7 @@ const EditProfileForm = ({ onEditClick }) => {
       (profileImage && profileImage.size > 500 * 1024) ||
       (bannerImage && bannerImage.size > 500 * 1024)
     ) {
-      alert("Image size should be under 500KB");
+      toast.error("Image size should be under 500KB");
       return;
     }
 
@@ -130,19 +131,19 @@ const EditProfileForm = ({ onEditClick }) => {
       };
       localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
 
       // Reset images
       setProfileImage(null);
       setBannerImage(null);
     } catch (err) {
-      console.error("Update error:", err);
-      alert(err.response?.data?.message || "Failed to update profile.");
+      toast.error(err.response?.data?.error || "Failed to update profile.");
     }
   };
 
   return (
     <div className="flex gap-6 mt-[30px] ml-[30px] max-h-[80vh] overflow-hidden pr-2">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="w-[970px] max-h-[calc(100vh-80px)] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col relative overflow-hidden">
         {/* Close Button */}
         <div
@@ -332,7 +333,7 @@ const EditProfileForm = ({ onEditClick }) => {
               Save Changes
             </button>
           </form>
-        </div> 
+        </div>
       </div>
     </div>
   );

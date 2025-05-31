@@ -3,6 +3,7 @@ import axios from "axios";
 import { IoAdd, IoChatbubble, IoSend, IoStar } from "react-icons/io5";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { FaRegCircle, FaCheckCircle } from "react-icons/fa";
+import { Toaster, toast } from "react-hot-toast";
 
 const ChatBot = () => {
   const [message, setMessage] = useState("");
@@ -207,7 +208,9 @@ YOUR RESPONSE MUST BE:
         }
       }
     } catch (error) {
-      console.error("❌ Failed to fetch chat history:", error);
+      toast.error(
+        error.response?.data?.error || "Failed to fetch chat history"
+      );
       if (error.response) {
         console.error("Response data:", error.response.data);
         console.error("Status code:", error.response.status);
@@ -235,12 +238,12 @@ YOUR RESPONSE MUST BE:
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("user"));
     if (!stored || !stored._id) {
-      console.error("No valid user found");
+      toast.error("No valid user found. Please log in.");
       return;
     }
     setUserId(stored._id);
     fetchChatbotHistory(stored._id); // 👈 this must be a real ID
-    console.log("User ID to fetch chat history for:", stored._id);
+    // console.log("User ID to fetch chat history for:", stored._id);
   }, []);
 
   const generateShortTitle = async (userMsg) => {
@@ -260,6 +263,7 @@ YOUR RESPONSE MUST BE:
 
   return (
     <div className="flex gap-6 mt-[30px] ml-[30px]">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="w-[900px] h-[560px] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col justify-between">
         <div className="overflow-y-auto flex-1 pr-2">
           {messages.map((msg, index) => (

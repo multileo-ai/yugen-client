@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { IoClose } from "react-icons/io5";
 
 const ProfileLeftTab = ({
@@ -55,7 +56,10 @@ const ProfileLeftTab = ({
 
       setUser(res.data);
     } catch (err) {
-      console.error("Failed to fetch user data", err);
+      toast.error(
+        err.response?.data?.error ||
+          "Failed to fetch user data. Please try again."
+      );
     }
   };
 
@@ -69,6 +73,7 @@ const ProfileLeftTab = ({
 
   return (
     <div className="mt-[30px] ml-[30px] w-[360px] h-[80vh] bg-[#6D6AEF] rounded-[50px] flex flex-col">
+      <Toaster position="top-right" reverseOrder={false} />
       {/* Banner */}
       <div className="w-[360px] h-[30%] rounded-t-[50px] relative overflow-hidden">
         <img

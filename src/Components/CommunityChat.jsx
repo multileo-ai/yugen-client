@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const CommunityChat = ({ onUserClick }) => {
   const baseURL =
@@ -53,7 +54,10 @@ const CommunityChat = ({ onUserClick }) => {
         setMessages([]);
       }
     } catch (err) {
-      console.error("Failed to fetch messages:", err.response?.data || err);
+      toast.error(
+        err.response?.data?.error ||
+          "Failed to fetch messages. Please try again."
+      );
     }
   };
 
@@ -64,7 +68,7 @@ const CommunityChat = ({ onUserClick }) => {
       const token = currentUser.token;
 
       if (!token) {
-        console.error("No token found, please login");
+        toast.error("No token found, please login");
         return;
       }
 
@@ -95,7 +99,9 @@ const CommunityChat = ({ onUserClick }) => {
 
       setMessage("");
     } catch (err) {
-      console.error("Failed to send message:", err);
+      toast.error(
+        err.response?.data?.error || "Failed to send message. Please try again."
+      );
     }
   };
 
@@ -109,6 +115,7 @@ const CommunityChat = ({ onUserClick }) => {
 
   return (
     <div className="flex gap-6 mt-[30px] ml-[30px]">
+      <Toaster position="top-right" reverseOrder={false} />
       {/* Chat Box */}
       <div className="w-[970px] h-[560px] border border-black rounded-xl p-[20px] bg-white shadow-[rgb(204,219,232)_3px_3px_6px_0px_inset,rgba(255,255,255,0.5)_-3px_-3px_6px_1px_inset] flex flex-col justify-between">
         {/* Message Display */}

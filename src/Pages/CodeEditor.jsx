@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const CodeEditor = () => {
   const { taskId } = useParams();
@@ -115,7 +116,7 @@ const CodeEditor = () => {
 
   const uploadCode = async () => {
     const token = currentUser?.token;
-    if (!token) return alert("You must be logged in.");
+    if (!token) return toast.error("Login required to upload code."); // 🚫 alert if not logged in
 
     const trimmedFileName = fileName.trim();
     const isHtmlValid =
@@ -126,7 +127,7 @@ const CodeEditor = () => {
 
     // ✅ Check: file name must be entered
     if (!trimmedFileName || trimmedFileName === "Enter File Name") {
-      alert("Please enter a valid file name before uploading.");
+      toast.error("Please enter a valid file name before uploading.");
       setTempFileName(fileName);
       setShowPopup(true); // show rename popup
       return;
@@ -134,7 +135,9 @@ const CodeEditor = () => {
 
     // ✅ Check: at least one editor must have content
     if (!isHtmlValid && !isCssValid && !isJsValid) {
-      alert("Please write code in at least one of the boxes before uploading.");
+      toast.error(
+        "Please write code in at least one of the boxes before uploading."
+      );
       return;
     }
 
@@ -159,18 +162,20 @@ const CodeEditor = () => {
       );
 
       if (res.status === 200) {
-        alert("Code uploaded successfully!");
+        toast.success("Code uploaded successfully!");
       } else {
-        alert("Upload failed: " + res.data.message);
+        toast.error("Upload failed. Please try again.");
       }
     } catch (err) {
-      console.error("Upload error:", err);
-      alert("An error occurred while uploading the code.");
+      toast.error(
+        err.response?.data?.error || "Upload failed. Please try again."
+      );
     }
   };
 
   return (
     <>
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="flex mt-[30px] ml-[20px] gap-5">
         <div className="w-[50px] h-[560px] relative flex justify-center items-center">
           <div
