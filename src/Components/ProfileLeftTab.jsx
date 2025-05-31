@@ -30,48 +30,31 @@ const ProfileLeftTab = ({
     if (!storedUser?.token && !selectedUser) return;
 
     try {
-      const baseURL =
-        process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
-
       let res;
 
       if (selectedUser) {
-        // ✅ Corrected route for viewing another user's profile
-        // res = await axios.get(
-        //   `http://localhost:5000/api/auth/user/${selectedUser}`
-        // );
-
         res = await axios.get(`${baseURL}/api/auth/user/${selectedUser}`);
-      } else {
-        // res = await axios.get("http://localhost:5000/api/auth/me", {
-        //   headers: {
-        //     Authorization: `Bearer ${storedUser.token}`,
-        //   },
-        // });
+        setUser(res.data);
 
+        // Check if current user is following this selected user
+        const resCurrent = await axios.get(`${baseURL}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${storedUser.token}` },
+        });
+
+        const followingIds = resCurrent.data.followingList.map((f) => f.userId);
+        setIsFollowing(followingIds.includes(res.data._id));
+      } else {
         res = await axios.get(`${baseURL}/api/auth/me`, {
           headers: {
             Authorization: `Bearer ${storedUser.token}`,
           },
         });
+        setUser(res.data);
       }
-
-      setUser(res.data);
-
-      if (!selectedUser) return;
-
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      if (!storedUser) return;
-
-      const resCurrent = await axios.get(`${baseURL}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${storedUser.token}` },
-      });
-
-      const followingIds = resCurrent.data.followingList.map((f) => f.userId);
-      setIsFollowing(followingIds.includes(res.data._id));
     } catch (err) {
+      console.error("User data fetch failed:", err);
       toast.error(
-        err.response?.data?.error ||
+        err.response?.data?.message ||
           "Failed to fetch user data. Please try again."
       );
     }
