@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -11,8 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     if (!form.identifier || !form.password) {
-      setError("Please enter username/email and password.");
-      toast.error("Please enter username/email and password.");
+      toast.error("Please enter username / email and password.");
       return;
     }
 
@@ -53,7 +53,6 @@ const Login = () => {
       toast.success("Login successful!");
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.error || "Something went wrong. Try again.");
       toast.error(
         err.response?.data?.error || "Something went wrong. Try again."
       );
@@ -62,6 +61,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F8FD] flex items-center justify-center">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="relative w-[900px] h-[560px] overflow-hidden rounded-2xl shadow-xl bg-white flex">
         {/* LOGIN FORM */}
         <div className="w-1/2 p-10 flex flex-col justify-center bg-white">

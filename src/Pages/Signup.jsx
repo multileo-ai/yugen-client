@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -23,11 +24,9 @@ const Signup = () => {
 
       // await axios.post(`${process.env.REACT_APP_API_URL}/auth/signup`, form);
 
-      alert("Signup successful!");
       toast.success("Signup successful! Please login to continue.");
       navigate("/login");
     } catch (err) {
-      alert(err.response?.data?.error || "Signup failed");
       toast.error(
         err.response?.data?.error || "Signup failed. Please try again."
       );
@@ -36,6 +35,7 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F8FD] flex items-center justify-center">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="relative w-[900px] h-[560px] overflow-hidden rounded-2xl shadow-xl bg-white flex">
         {/* SIGNUP FORM */}
         <div className="w-1/2 p-10 flex flex-col justify-center bg-white">

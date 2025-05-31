@@ -13,6 +13,7 @@ import Landing from "./Pages/Landing"; // you'll create this
 import "./App.css";
 // import PrivateRoute from "./Components/PrivateRoute";
 import Community from "./Pages/Community";
+import { Toaster, toast } from "react-hot-toast";
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -46,7 +47,6 @@ const Layout = ({ children }) => {
 const App = () => {
   return (
     <Layout>
-      <Toaster position="top-right" reverseOrder={false} />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
