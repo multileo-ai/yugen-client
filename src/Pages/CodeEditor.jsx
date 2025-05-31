@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const CodeEditor = () => {
   const { taskId } = useParams();
@@ -111,6 +112,42 @@ const CodeEditor = () => {
     }
   };
 
+  const uploadCode = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("You must be logged in.");
+
+    const baseURL =
+      process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+    console.log("API base URL:", baseURL);
+
+    try {
+      const res = await axios.post(
+        `${baseURL}/api/code`,
+        {
+          title: fileName,
+          html,
+          css,
+          js,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        alert("Code uploaded successfully!");
+      } else {
+        alert("Upload failed: " + res.data.message);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("An error occurred while uploading the code.");
+    }
+  };
+
   return (
     <>
       <div className="flex mt-[30px] ml-[20px] gap-5">
@@ -219,7 +256,10 @@ const CodeEditor = () => {
                 </div>
 
                 <div className="h-[160px] w-[80px] bg-[#6D6AEF] mt-[90px] rounded-2xl cursor-pointer flex justify-center items-center">
-                  <div className="flex flex-col mt-[18px] text-white text-[14px] text-center select-none">
+                  <div
+                    className="flex flex-col mt-[18px] text-white text-[14px] text-center select-none"
+                    onClick={uploadCode}
+                  >
                     <span>U</span>
                     <span>P</span>
                     <span>L</span>
