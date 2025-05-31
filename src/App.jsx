@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import SideNav from "./Components/SideNav";
@@ -9,29 +10,27 @@ import ChatBot from "./Pages/ChatBot";
 import Profile from "./Pages/Profile";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
-import Landing from "./Pages/Landing"; // you'll create this
-import "./App.css";
-// import PrivateRoute from "./Components/PrivateRoute";
+import Landing from "./Pages/Landing";
 import Community from "./Pages/Community";
+import io from "socket.io-client";
 import { Toaster, toast } from "react-hot-toast";
+
+import "./App.css";
+
+// ✅ Create socket connection
+const socket = io(
+  process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com"
+);
 
 const Layout = ({ children }) => {
   const location = useLocation();
 
-  if (location.pathname.startsWith("/preview")) {
-    return <>{children}</>;
-  }
-
-  // if (location.pathname.startsWith("/")) {
-  //   return <>{children}</>; // no navbar for landing page
-  // }
-
+  if (location.pathname.startsWith("/preview")) return <>{children}</>;
   if (
     location.pathname.startsWith("/login") ||
     location.pathname.startsWith("/signup")
-  ) {
-    return <>{children}</>; // no navbar for auth pages
-  }
+  )
+    return <>{children}</>;
 
   return (
     <>
@@ -45,6 +44,24 @@ const Layout = ({ children }) => {
 };
 
 const App = () => {
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser?._id) return;
+
+    // ✅ Register user on socket
+    socket.emit("register-user", storedUser._id);
+
+    // ✅ Listen for real-time notifications
+    socket.on("new-notification", (data) => {
+      toast.success(data.message); // Show toast on follow
+    });
+
+    // Cleanup on unmount
+    return () => {
+      socket.off("new-notification");
+    };
+  }, []);
+
   return (
     <Layout>
       <Routes>
