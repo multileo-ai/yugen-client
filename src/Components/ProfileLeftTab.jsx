@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoHeart } from "react-icons/io5";
 
 const ProfileLeftTab = ({
   onEditClick,
