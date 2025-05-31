@@ -12,6 +12,8 @@ const ProfileLeftTab = ({
   const baseURL =
     process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
 
+  const [isFollowing, setIsFollowing] = useState(false);
+
   const [user, setUser] = useState({
     name: "",
     username: "",
@@ -55,11 +57,52 @@ const ProfileLeftTab = ({
       }
 
       setUser(res.data);
+
+      if (!selectedUser) return;
+
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser) return;
+
+      const resCurrent = await axios.get(`${baseURL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${storedUser.token}` },
+      });
+
+      const followingIds = resCurrent.data.followingList.map((f) => f.userId);
+      setIsFollowing(followingIds.includes(res.data._id));
     } catch (err) {
       toast.error(
         err.response?.data?.error ||
           "Failed to fetch user data. Please try again."
       );
+    }
+  };
+
+  const handleFollowClick = async () => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (!storedUser?.token || !user._id) return;
+
+    try {
+      const res = await axios.post(
+        `${baseURL}/api/auth/follow/${user._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${storedUser.token}`,
+          },
+        }
+      );
+
+      setIsFollowing(res.data.following);
+      setUser((prev) => ({
+        ...prev,
+        followers: res.data.targetUserFollowersCount,
+      }));
+
+      // Optional: emit an event to update your own following count
+      window.dispatchEvent(new Event("profile-updated"));
+    } catch (err) {
+      toast.error("Failed to follow/unfollow user");
+      console.error(err);
     }
   };
 
@@ -112,10 +155,13 @@ const ProfileLeftTab = ({
 
         {selectedUser && (
           <div
-            className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[40px] cursor-pointer"
-            // onClick={handleFollowClick}
+            className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[30px] cursor-pointer"
+            onClick={handleFollowClick}
           >
-            <IoHeart size={20} className="text-red-500" />
+            <IoHeart
+              size={20}
+              className={isFollowing ? "text-red-500" : "text-black"}
+            />
           </div>
         )}
       </div>
