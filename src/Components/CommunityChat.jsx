@@ -9,10 +9,31 @@ const CommunityChat = ({ onUserClick }) => {
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+
+  const [allUsers, setAllUsers] = useState([]);
+  const [mentionSuggestions, setMentionSuggestions] = useState([]);
+  const [mentionStartIndex, setMentionStartIndex] = useState(null);
+
   const bottomRef = useRef(null);
 
   // Fix currentUser: assume localStorage 'user' stores { token, user }
   const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Extract mentions
+
+  useEffect(() => {
+    // Fetch all users once
+    const fetchUsers = async () => {
+      try {
+        const res = await axios.get(`${baseURL}/api/users`); // Make sure this route exists and returns usernames
+        setAllUsers(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch users for mentions");
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     fetchMessages(); // Initial fetch
@@ -63,6 +84,16 @@ const CommunityChat = ({ onUserClick }) => {
 
   const handleSend = async () => {
     if (message.trim() === "") return;
+
+    const mentionedUsernames = [...message.matchAll(/@(\w+)/g)].map(
+      (m) => m[1]
+    );
+
+    mentionedUsernames.forEach((username) => {
+      if (username !== currentUser.username) {
+        toast(`User @${username} was mentioned!`);
+      }
+    });
 
     try {
       const token = currentUser.token;
@@ -163,11 +194,55 @@ const CommunityChat = ({ onUserClick }) => {
           <input
             type="text"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setMessage(val);
+
+              const cursor = e.target.selectionStart;
+              const textUpToCursor = val.slice(0, cursor);
+              const match = textUpToCursor.match(/@(\w*)$/);
+
+              if (match) {
+                const partial = match[1].toLowerCase();
+                setMentionStartIndex(cursor - match[0].length);
+
+                const filtered = allUsers.filter(
+                  (u) =>
+                    u.username.toLowerCase().startsWith(partial) &&
+                    u.username !== currentUser.username
+                );
+                setMentionSuggestions(filtered.slice(0, 5));
+              } else {
+                setMentionSuggestions([]);
+                setMentionStartIndex(null);
+              }
+            }}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Type your message..."
             className="flex-1 p-3 rounded-xl border border-gray-300 outline-none text-sm"
           />
+          {mentionSuggestions.length > 0 && (
+            <div className="absolute bottom-16 bg-white border rounded-md shadow-md w-[200px] max-h-[150px] overflow-y-auto z-50">
+              {mentionSuggestions.map((user) => (
+                <div
+                  key={user._id}
+                  onClick={() => {
+                    const before = message.slice(0, mentionStartIndex);
+                    const after = message.slice(
+                      message.indexOf(" ", mentionStartIndex) !== -1
+                        ? message.indexOf(" ", mentionStartIndex)
+                        : message.length
+                    );
+                    setMessage(`${before}@${user.username} ${after}`.trim());
+                    setMentionSuggestions([]);
+                  }}
+                  className="px-3 py-2 hover:bg-gray-200 cursor-pointer text-sm"
+                >
+                  @{user.username}
+                </div>
+              ))}
+            </div>
+          )}
           <button
             onClick={handleSend}
             className="p-3 rounded-full transition bg-[#6D6AEF] text-white hover:opacity-90"
