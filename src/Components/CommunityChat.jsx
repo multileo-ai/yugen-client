@@ -89,12 +89,6 @@ const CommunityChat = ({ onUserClick }) => {
       (m) => m[1]
     );
 
-    mentionedUsernames.forEach((username) => {
-      if (username !== currentUser.username) {
-        toast(`User @${username} was mentioned!`);
-      }
-    });
-
     try {
       const token = currentUser.token;
 
@@ -181,7 +175,15 @@ const CommunityChat = ({ onUserClick }) => {
                     >
                       {msg.name} (@{msg.username}):
                     </strong>{" "}
-                    {msg.message}
+                    {msg.message.split(/(@\w+)/g).map((part, i) =>
+                      part.startsWith("@") ? (
+                        <span key={i} className="text-blue-600 font-medium">
+                          {part}
+                        </span>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      )
+                    )}
                   </div>
                 </div>
               );
