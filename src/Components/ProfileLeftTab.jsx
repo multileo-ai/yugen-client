@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoHeart } from "react-icons/io5";
 
 const ProfileLeftTab = ({
   onEditClick,
@@ -93,7 +93,7 @@ const ProfileLeftTab = ({
             className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] right-[20px] cursor-pointer"
             onClick={onCloseClick}
           >
-            <IoClose size={20} />
+            <IoHeart size={20} />
           </div>
         ) : (
           <div
