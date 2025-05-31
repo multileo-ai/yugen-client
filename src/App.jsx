@@ -22,6 +22,9 @@ const socket = io(
   process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com"
 );
 
+const baseURL =
+  process.env.REACT_APP_API_URL || "https://yugen-service.onrender.com";
+
 const Layout = ({ children }) => {
   const location = useLocation();
 
@@ -68,7 +71,11 @@ const App = () => {
                   onError={(e) => {
                     e.target.src = "/default-pfp.jpg"; // Fallback image
                   }}
-                  src={`${process.env.REACT_APP_API_URL}/api/user/image/${user._id}/profileImage`}
+                  src={
+                    user._id
+                      ? `${baseURL}/api/auth/image/${user._id}/profileImage`
+                      : "/default_pfp.jpg"
+                  }
                   alt={user.name}
                 />
               </div>
