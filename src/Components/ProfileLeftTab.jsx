@@ -112,7 +112,7 @@ const ProfileLeftTab = ({
       {selectedUser && (
         <div
           className="bg-white w-[30px] h-[30px] rounded-[12px] flex justify-center items-center absolute top-[20px] left-[20px] cursor-pointer"
-          onClick={handleFollowClick}
+          // onClick={handleFollowClick}
         >
           <IoHeart size={20} className="text-red-500" />
         </div>
